@@ -13,10 +13,10 @@ export default function SideBar() {
     setValue(val.target.value);
   };
 
-  function HandleClick() {
+  const HandleClick = () => {
     dispatch(setTel(value));
     ref.current.value = "";
-  }
+  };
 
   return (
     <S.container>

@@ -1,6 +1,6 @@
 const BASE_URL = "https://api.green-api.com";
 
-export async function SetSettings(id, token) {
+export const SetSettings = async (id, token) => {
   const settings = {
     method: "POST",
     body: JSON.stringify({
@@ -21,9 +21,9 @@ export async function SetSettings(id, token) {
   } catch (err) {
     alert(err);
   }
-}
+};
 
-export async function SendMessage(id, token, tel, message) {
+export const SendMessage = async (id, token, tel, message) => {
   const settings = {
     method: "POST",
     body: JSON.stringify({
@@ -42,9 +42,9 @@ export async function SendMessage(id, token, tel, message) {
   } catch (err) {
     alert(err);
   }
-}
+};
 
-export async function GetMessage(id, token) {
+export const GetMessage = async (id, token) => {
   try {
     let response = await fetch(
       `${BASE_URL}/waInstance${id}/receiveNotification/${token}`
@@ -55,9 +55,9 @@ export async function GetMessage(id, token) {
   } catch (err) {
     alert(err);
   }
-}
+};
 
-export async function DelMessage(id, token, receiptId) {
+export const DelMessage = async (id, token, receiptId) => {
   const settings = {
     method: "DELETE",
   };
@@ -71,4 +71,4 @@ export async function DelMessage(id, token, receiptId) {
   } catch (err) {
     alert(err);
   }
-}
+};
