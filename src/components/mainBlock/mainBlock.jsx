@@ -1,10 +1,10 @@
-import { React, useState, useRef } from "react";
+import { React, useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as S from "./styled";
 import { SendMessage, GetMessage, DelMessage } from "../../api/api";
 import { setMessages } from "../../store/messagesSlice";
 
-export default function CenterBlock() {
+export default function MainBlock() {
   const dispatch = useDispatch();
   const [messageSend, setMessageSend] = useState("");
   const [error, setError] = useState(false);
@@ -20,24 +20,27 @@ export default function CenterBlock() {
     setMessageSend(val.target.value);
   };
 
-  setInterval(async () => {
-    const data = await GetMessage(id, token);
-    if (data !== null && data.receiptId !== messageReceivedId) {
-      setMessageReceivedId(data.receiptId);
+  useEffect(() => {
+    const intervalID = setInterval(async () => {
+      const data = await GetMessage(id, token);
+      if (data !== null && data.receiptId !== messageReceivedId) {
+        setMessageReceivedId(data.receiptId);
 
-      await DelMessage(id, token, data.receiptId);
-      if (data.body.typeWebhook === "incomingMessageReceived") {
-        if (data.body.senderData.chatId === chatId) {
-          dispatch(
-            setMessages({
-              message: data.body.messageData.textMessageData.textMessage,
-              type: "received",
-            })
-          );
+        await DelMessage(id, token, data.receiptId);
+        if (data.body.typeWebhook === "incomingMessageReceived") {
+          if (data.body.senderData.chatId === chatId) {
+            dispatch(
+              setMessages({
+                message: data.body.messageData.textMessageData.textMessage,
+                type: "received",
+              })
+            );
+          }
         }
       }
-    }
-  }, 10000);
+    }, 5000);
+    return () => clearInterval(intervalID);
+  });
 
   const HandleClick = async () => {
     if (messageSend !== "") {
